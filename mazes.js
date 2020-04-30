@@ -1,10 +1,10 @@
 //directions
-const directions = [
-  [0, -1],
-  [-1, 0],
-  [1, 0],
-  [0, 1],
-];
+const directions = {
+  top: [0, -1],
+  left: [-1, 0],
+  right: [1, 0],
+  bottom: [0, 1],
+};
 
 //helper functions
 function shuffle(arr) {
@@ -16,52 +16,70 @@ function shuffle(arr) {
   }
 }
 
-
 //main function
 function recursiveBacktrack(grid) {
-  //select start at random, if not given one
-  console.log('grid, x, y: ', grid, x, y);
+  //select start at random
+  console.log('grid', grid);
 
-  if (!(x && y)) {
-    x = Math.floor(Math.random() * grid.length);
-    y = Math.floor(Math.random() * grid.length);
-  }
+  let x = Math.floor(Math.random() * grid.length);
+  let y = Math.floor(Math.random() * grid.length);
 
-  let start = grid[x][y];
-  start.visited = true;
+  //initialize path stack and push start
+
+  const stack = [];
+  const start = grid[x][y];
+  let current = start;
 
   console.log('x, y, start: ', x, y, start);
 
-  //get neighbors
-  shuffle(directions);
-  console.log('directions: ', directions);
+  current.visited = true;
+  stack.push(current);
 
-  let neighbor = null;
+  //while stack
+  while (stack.length > 0) {
+    let x = current.location[0];
+    let y = current.location[1];
 
-  //find random unvisited neighbor, if one exists
-  for (let i = 0; i < directions.length; i++) {
-    x += directions[i][0];
-    y += directions[i][1];
+    console.log('x, y, current: ', x, y, current);
+    console.log('stack: ', stack);
 
-    if (grid[x] && grid[x][y]) {
-      if (!grid[x][y].visited) {
-        neighbor = grid[x][y];
-        break;
+    //get neighbors
+    let keys = Object.keys(directions);
+    let selectedKey = '';
+    shuffle(keys);
+
+    console.log('directions: ', keys);
+
+    let neighbor = null;
+
+    //find random unvisited neighbor, if one exists
+    for (let i = 0; i < keys.length; i++) {
+      let k = x + directions[keys[i]][0];
+      let m = y + directions[keys[i]][1];
+      console.log('in loop ', k, m);
+
+      if (grid[k] && grid[k][m]) {
+        if (!grid[k][m].visited) {
+          neighbor = grid[k][m];
+          selectedKey = keys[i];
+          break;
+        }
       }
     }
+
+    console.log('neighbor: ', neighbor);
+    console.log('selectedKey: ', selectedKey)
+
+    if (neighbor) {
+      current.clearWall(selectedKey);
+      current.fill();
+
+      neighbor.visited = true;
+      stack.push(neighbor);
+      current = neighbor;
+    } else {
+      current = stack.pop();
+      if (current === start) break;
+    }
   }
-
-  console.log('neighbors: ', neighbors);
-
-  // //if unvisited neighbor exists, carve path and recurse
-  // if (neighbors) {
-  //   for (let i = 0; i < neighbors.length; i++) {
-  //     let cell = neighbors[i];
-  //     start.clearWall()
-  //   }
-  // }
-  // if (neighbor) {
-  //   start.clearWall([x, y]);
-  //   recursiveBacktrack(grid, x, y);
-  // }
 }

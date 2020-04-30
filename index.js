@@ -7,6 +7,7 @@ function draw() {
   console.log('context: ', ctx);
 
   ctx.strokeStyle = 'black';
+  ctx.fillStyle = 'rgb(200, 0, 0)';
   ctx.lineWidth = 1;
 
   class Cell {
@@ -34,27 +35,32 @@ function draw() {
       ctx.closePath();
     }
 
+    fill() {
+      const { width, height, scale } = this;
+      ctx.fillRect(width + 1, height + 1 , width + scale - 2, height + scale - 2);
+    }
+
     clearWall(dir) {
       const { width, height, scale } = this;
 
-      ctx.clearRect(width + dir[0], height + dir[1], scale + dir[0], scale + dir[1]);
+      // ctx.clearRect(width + dir[0], height + dir[1], scale + dir[0], scale + dir[1]);
 
-    //   switch (dir) {
-    //     case 'top':
-    //       ctx.clearRect(width + 1, height - 1, scale - 2, scale);
-    //       break;
-    //     case 'left':
-    //       ctx.clearRect(width - 1, height + 1, scale, scale - 2);
-    //       break;
-    //     case 'right':
-    //       ctx.clearRect(width + 1, height + 1, scale, scale - 2);
-    //       break;
-    //     case 'bottom':
-    //       ctx.clearRect(width + 1, height + 1, scale - 2, scale);
-    //       break;
-    //     default:
-    //       ctx.clearRect(0, 0, 0, 0);
-    //   }
+      switch (dir) {
+        case 'top':
+          ctx.clearRect(width + 1, height - 1, scale - 2, scale);
+          break;
+        case 'left':
+          ctx.clearRect(width - 1, height + 1, scale, scale - 2);
+          break;
+        case 'right':
+          ctx.clearRect(width + 1, height + 1, scale, scale - 2);
+          break;
+        case 'bottom':
+          ctx.clearRect(width + 1, height + 1, scale - 2, scale);
+          break;
+        default:
+          ctx.clearRect(0, 0, 0, 0);
+      }
     }
   }
 
@@ -104,6 +110,8 @@ function draw() {
 
   testBoard.clear();
   recursiveBacktrack(testBoard.grid);
+
+  console.log('grid after: ', testBoard);
 
   // let testCell = testGrid.cells[2][2];
   // testCell.clearWall([-1, 0]);
