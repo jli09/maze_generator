@@ -16,17 +16,17 @@ function shuffle(arr) {
   }
 }
 
-const findNeighbor = (board, cell) => {
+const findNeighbor = (grid, cell) => {
     shuffle(directions);
 
-    const [x, y] = cell.getLocation();
+    const [i0, j0] = cell.getLocation();
 
     for (let i = 0; i < directions.length; i++) {
-        let k = x + directions[i][0];
-        let m = y + directions[i][1];
+        let k = i0 + directions[i][0];
+        let m = j0 + directions[i][1];
 
-        if (board[k] && board[k][m]) {
-            let neighbor = board[k][m];
+        if (grid[k] && grid[k][m]) {
+            let neighbor = grid[k][m];
 
             if (!neighbor.getVisited()) {
                 return neighbor;
@@ -37,29 +37,29 @@ const findNeighbor = (board, cell) => {
     return null;
 }
 
-const reverseBacktrack = (board, cell) => {
+const reverseBacktrack = (grid, cell) => {
     if (!cell) {
-        cell = board[0][0];
+        cell = grid[0][0];
     }
 
     cell.isVisited();
 
     // console.log('current cell: ', cell);
 
-    let neighbor = findNeighbor(board, cell);
+    let neighbor = findNeighbor(grid, cell);
 
     // console.log('neighbor: ', neighbor);
 
     if (neighbor) {
         neighbor.setPrevious(cell);
-        reverseBacktrack(board, neighbor);
+        reverseBacktrack(grid, neighbor);
     } else {
         let previous = cell.getPrevious();
 
         // console.log('previous: ', previous);
 
         if (previous) {
-            reverseBacktrack(board, previous);
+            reverseBacktrack(grid, previous);
         }
     }
 }

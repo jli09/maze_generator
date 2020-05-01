@@ -1,8 +1,8 @@
 class Cell{
-    constructor(x, y) {
+    constructor(i, j) {
         this.visited = false;
         this.previous = null;
-        this.location = [x, y];
+        this.location = [i, j];
     }
 
     setPrevious(cell) {
@@ -37,16 +37,16 @@ class Cell{
 
 class Board{
     constructor(x, y) {
-        this.x = x;
-        this.y = y;
+        this.width = x;
+        this.height = y;
         this.grid = [];
     }
 
     makeBoard() {
-        for (let i = 0; i < this.x; i++) {
+        for (let i = 0; i < this.height; i++) {
             let row = [];
 
-            for (let j = 0; j < this.y; j++) {
+            for (let j = 0; j < this.width; j++) {
                 row[j] = new Cell(i, j);
             }
 
@@ -58,19 +58,13 @@ class Board{
         return this.grid;
     }
 
-    getCell(x, y) {
-        if (x >= 0 && x < this.grid.length) {
-            if (this.grid[x][y]) {
-                return this.grid[x][y];
+    getCell(i, j) {
+        if (i >= 0 && j < this.grid.length) {
+            if (this.grid[i][j]) {
+                return this.grid[i][j];
             }
             else return undefined;
         }
     }
 }
 
-const testBoard = new Board(5, 5);
-
-testBoard.makeBoard();
-reverseBacktrack(testBoard.getBoard());
-
-console.log(testBoard.getBoard());

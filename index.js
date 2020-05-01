@@ -7,112 +7,81 @@ function draw() {
   console.log('context: ', ctx);
 
   ctx.strokeStyle = 'black';
-  ctx.fillStyle = 'rgb(200, 0, 0)';
+  // ctx.fillStyle = 'rgb(200, 0, 0)';
   ctx.lineWidth = 1;
 
-  class Cell {
-    constructor(width, height, scale) {
-      this.scale = scale;
-      this.width = width * scale;
-      this.height = height * scale;
-      this.visited = false;
-      this.location = null;
+  class CanvasBoard {
+    constructor(width, height, board) {
+      // this.width = width;
+      // this.height = height;
+      this.grid = board.getBoard();
+      this.wallWidth = width / board.width;
+      this.wallHeight = height / board.height;
     }
 
-    render() {
-      const { width, height, scale } = this;
-
+    makeTopWall(x, y) {
       ctx.beginPath();
-      ctx.moveTo(width, height);
-      ctx.lineTo(width + scale, height);
-      ctx.stroke();
-      ctx.lineTo(width + scale, height + scale);
-      ctx.stroke();
-      ctx.lineTo(width, height + scale);
-      ctx.stroke();
-      ctx.lineTo(width, height);
+      ctx.moveTo(x, y);
+      ctx.lineTo(x + this.wallWidth, y);
       ctx.stroke();
       ctx.closePath();
     }
 
-    fill() {
-      const { width, height, scale } = this;
-      ctx.fillRect(width + 1, height + 1 , width + scale - 2, height + scale - 2);
+    makeLeftWall(x, y) {
+      ctx.beginPath();
+      ctx.moveTo(x, y);
+      ctx.lineTo(x, y + this.wallHeight);
+      ctx.stroke();
+      ctx.closePath();
     }
 
-    clearWall(dir) {
-      const { width, height, scale } = this;
-
-      // ctx.clearRect(width + dir[0], height + dir[1], scale + dir[0], scale + dir[1]);
-
-      switch (dir) {
-        case 'top':
-          ctx.clearRect(width + 1, height - 1, scale - 2, scale);
-          break;
-        case 'left':
-          ctx.clearRect(width - 1, height + 1, scale, scale - 2);
-          break;
-        case 'right':
-          ctx.clearRect(width + 1, height + 1, scale, scale - 2);
-          break;
-        case 'bottom':
-          ctx.clearRect(width + 1, height + 1, scale - 2, scale);
-          break;
-        default:
-          ctx.clearRect(0, 0, 0, 0);
-      }
-    }
-  }
-
-  class Board {
-    constructor(x, y, size) {
-      this.width = x;
-      this.height = y;
-      this.size = size;
-      this.grid = [];
+    makeRightWall(x, y) {
+      ctx.beginPath();
+      ctx.moveTo(x + this.wallWidth, y);
+      ctx.lineTo(x + this.wallWidth, y + this.wallHeight);
+      ctx.stroke();
+      ctx.closePath();
     }
 
-    makeBoard() {
-      const { width, height, size, grid } = this;
-      const scale = size / width;
-
-      for (let i = 0; i < width; i++) {
-        let row = [];
-
-        for (let j = 0; j < height; j++) {
-          const newCell = new Cell(i, j, scale);
-          newCell.location = [i, j];
-          newCell.render();
-          row.push(newCell);
-        }
-
-        grid.push(row);
-      }
+    makeBottomWall(x, y) {
+      ctx.beginPath();
+      ctx.moveTo(x, y + this.wallHeight);
+      ctx.lineTo(x + this.wallWidth, y + this.wallHeight);
+      ctx.stroke();
+      ctx.closePath();
     }
 
-    clear() {
+    drawBoard() {
       const { grid } = this;
 
       for (let i = 0; i < grid.length; i++) {
         let row = grid[i];
 
         for (let j = 0; j < row.length; j++) {
-          row[j].visited = false;
+          let cell = grid[i][j];
+
+          if (i === 0)
+            this.makeTopWall(j * this.wallWidth, i * this.wallHeight);
+          if (j === 0)
+            this.makeLeftWall(j * this.wallWidth, i * this.wallHeight);
+          
+          if (j === grid[i].length - 1 || (grid[i][j + 1].previous !== cell && cell.previous !== grid[i][j + 1])) 
+            this.makeRightWall(j * this.wallWidth, i * this.wallHeight);
+          
+          if (i === grid.length - 1 || (grid[i + 1][j].previous !== cell && cell.previous !== grid[i+1][j]))
+            this.makeBottomWall(j * this.wallWidth, i * this.wallHeight);
         }
       }
     }
   }
 
-  const testBoard = new Board(5, 5, 600);
+  const testBoard = new Board(50, 50);
+
   testBoard.makeBoard();
+  reverseBacktrack(testBoard.getBoard());
 
-  console.log('test grid: ', testBoard);
+  console.log(testBoard.getBoard());
 
-  testBoard.clear();
-  recursiveBacktrack(testBoard.grid);
-
-  console.log('grid after: ', testBoard);
-
-  // let testCell = testGrid.cells[2][2];
-  // testCell.clearWall([-1, 0]);
+  const testMaze = new CanvasBoard(600, 600, testBoard);
+  testMaze.drawBoard();
 }
