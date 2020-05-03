@@ -58,7 +58,17 @@ const reverseBacktrack = (board, cell) => {
 
   if (neighbor) {
     //clear the wall between cell and the neighbor
-    cell.clearWall(direction);
+      
+    //adjustment for how the board is set up 
+      switch (direction) {
+          case 'north':
+              neighbor.clearWall('south');
+              break;
+          case 'west':
+              neighbor.clearWall('east');
+              break;
+          default: cell.clearWall(direction);
+      }
 
     //establish path between this cell and the neighbor
     neighbor.setPrevious(cell);

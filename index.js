@@ -36,15 +36,15 @@ function draw() {
     initCell(cell) {
       let [y, x] = cell.address;
 
-      //set starting point, i.e. top left corner of cell on canvas *inside of walls*
+      //set starting point, i.e. top left corner of cell on canvas *including walls*
 
-      if (x === 0) x = 1;
-      else x = x * this.wallWidth;
+      // if (x === 0) x = 1;
+      // else x = x * this.wallWidth;
 
-      if (y === 0) y = 1;
-      else y = y * this.wallHeight;
+      // if (y === 0) y = 1;
+      // else y = y * this.wallHeight;
 
-      cell.location = [x, y];
+      cell.location = [x * this.wallWidth, y * this.wallHeight];
 
       //get the wall keys from cell
       let wallKeys = Object.keys(cell.walls);
@@ -53,7 +53,9 @@ function draw() {
         let dir = wallKeys[i];
 
         //if the wall is set to true, draw the wall
-        if (dir) this.makeWall(cell, dir);
+        if (cell.walls[dir]) {
+          this.makeWall(cell, dir);
+        }
       }
     }
 
@@ -65,8 +67,8 @@ function draw() {
       const { wallWidth, wallHeight } = this;
 
       //adjustment for edges
-      if (cell.address[1] === 0) x = x - 1;
-      if (cell.address[0] === 0) y = y - 1;
+      // if (cell.address[1] === 0) x = x - 1;
+      // if (cell.address[0] === 0) y = y - 1;
 
       switch (dir) {
         case 'north':
@@ -100,67 +102,12 @@ function draw() {
       ctx.stroke();
       ctx.closePath();
     }
-
-    // makeTopWall(x, y) {
-    //   ctx.beginPath();
-    //   ctx.moveTo(x, y);
-    //   ctx.lineTo(x + this.wallWidth, y);
-    //   ctx.stroke();
-    //   ctx.closePath();
-    // }
-
-    // makeLeftWall(x, y) {
-    //   ctx.beginPath();
-    //   ctx.moveTo(x, y);
-    //   ctx.lineTo(x, y + this.wallHeight);
-    //   ctx.stroke();
-    //   ctx.closePath();
-    // }
-
-    // makeRightWall(x, y) {
-    //   ctx.beginPath();
-    //   ctx.moveTo(x + this.wallWidth, y);
-    //   ctx.lineTo(x + this.wallWidth, y + this.wallHeight);
-    //   ctx.stroke();
-    //   ctx.closePath();
-    // }
-
-    // makeBottomWall(x, y) {
-    //   ctx.beginPath();
-    //   ctx.moveTo(x, y + this.wallHeight);
-    //   ctx.lineTo(x + this.wallWidth, y + this.wallHeight);
-    //   ctx.stroke();
-    //   ctx.closePath();
-    // }
-
-    // drawBoard() {
-    //   const { grid } = this;
-
-    //   for (let i = 0; i < grid.length; i++) {
-    //     let row = grid[i];
-
-    //     for (let j = 0; j < row.length; j++) {
-    //       let cell = grid[i][j];
-
-    //       if (i === 0)
-    //         this.makeTopWall(j * this.wallWidth, i * this.wallHeight);
-    //       if (j === 0)
-    //         this.makeLeftWall(j * this.wallWidth, i * this.wallHeight);
-
-    //       if (j === grid[i].length - 1 || (grid[i][j + 1].previous !== cell && cell.previous !== grid[i][j + 1]))
-    //         this.makeRightWall(j * this.wallWidth, i * this.wallHeight);
-
-    //       if (i === grid.length - 1 || (grid[i + 1][j].previous !== cell && cell.previous !== grid[i+1][j]))
-    //         this.makeBottomWall(j * this.wallWidth, i * this.wallHeight);
-    //     }
-    //   }
-    // }
   }
 
   const testBoard = new Board(5, 5);
 
   testBoard.makeBoard();
-  // reverseBacktrack(testBoard.board);
+  reverseBacktrack(testBoard.board);
 
   console.log(testBoard.board);
 
