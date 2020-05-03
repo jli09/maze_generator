@@ -107,6 +107,9 @@ function draw() {
   const testBoard = new Board(5, 5);
 
   testBoard.makeBoard();
+  testBoard.makeEntrance();
+  testBoard.makeExit();
+
   reverseBacktrack(testBoard.board);
 
   console.log(testBoard.board);

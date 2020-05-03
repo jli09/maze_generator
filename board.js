@@ -48,20 +48,20 @@ class Board {
       let row = [];
 
       for (let j = 0; j < this.width; j++) {
-          let cell = new Cell(i, j);
-          
-          //set north wall to true if on the top row
-          if (i === 0) cell.setWall('north');
+        let cell = new Cell(i, j);
 
-          //set west wall to true if on the left most row
-          if (j === 0) cell.setWall('west');
+        //set north wall to true if on the top row
+        if (i === 0) cell.setWall('north');
 
-          //set south and east walls to true for all cells
-          cell.setWall('east');
-          cell.setWall('south');
+        //set west wall to true if on the left most row
+        if (j === 0) cell.setWall('west');
 
-          //put cell in row
-          row[j] = cell;
+        //set south and east walls to true for all cells
+        cell.setWall('east');
+        cell.setWall('south');
+
+        //put cell in row
+        row[j] = cell;
       }
 
       this.board.push(row);
@@ -75,4 +75,14 @@ class Board {
       } else return undefined;
     }
   }
+
+  makeEntrance() {
+      const startCell = this.board[0][0];
+      startCell.clearWall('north');
+  }
+    
+    makeExit() {
+        const endCell = this.board[this.board.length - 1][this.board[0].length - 1];
+        endCell.clearWall('south');
+    }
 }
