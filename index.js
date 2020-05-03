@@ -1,6 +1,4 @@
-function draw() {
   //setting up canvas
-  const canvas = document.getElementById('tutorial');
   const ctx = canvas.getContext('2d');
 
   console.log('canvas: ', canvas);
@@ -105,13 +103,18 @@ function draw() {
     }
   }
 
+canvas.addEventListener('visited', (event) => {
+  const cell = event.detail;
+    console.log('visited: ', cell);
+  });
+
   const testBoard = new Board(5, 5);
 
   testBoard.makeBoard();
   testBoard.makeEntrance();
   testBoard.makeExit();
 
-  // reverseBacktrack(testBoard.board);
+  reverseBacktrack(testBoard.board);
 
   console.log(testBoard.board);
 
@@ -119,4 +122,4 @@ function draw() {
   testMaze.initBoard();
 
   // testMaze.drawBoard();
-}
+

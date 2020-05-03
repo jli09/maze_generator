@@ -1,4 +1,6 @@
 //directions
+const canvas = document.getElementById('tutorial');
+
 const dirKeys = ['north', 'east', 'south', 'west'];
 
 const directions = {
@@ -45,6 +47,10 @@ const reverseBacktrack = (board, cell) => {
   if (!cell) {
     cell = board[0][0];
   }
+
+  const message = new CustomEvent('visited', {detail: cell});
+  canvas.dispatchEvent(message);
+
 
   //mark current cell as visited
   cell.visited = true;
