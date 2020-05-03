@@ -75,13 +75,13 @@ function draw() {
     }
   }
 
-  const testBoard = new Board(50, 50);
+  const testBoard = new Board(5, 5);
 
   testBoard.makeBoard();
-  reverseBacktrack(testBoard.getBoard());
+  reverseBacktrack(testBoard.board);
 
-  console.log(testBoard.getBoard());
+  console.log(testBoard.board);
 
-  const testMaze = new CanvasBoard(600, 600, testBoard);
-  testMaze.drawBoard();
+  // const testMaze = new CanvasBoard(600, 600, testBoard);
+  // testMaze.drawBoard();
 }

@@ -24,7 +24,7 @@ const findNeighbor = (board, cell) => {
   const [i0, j0] = cell.address;
 
   for (let i = 0; i < dirKeys.length; i++) {
-    let dirKey = dirKeys[0];
+    let dirKey = dirKeys[i];
     let k = i0 + directions[dirKey][0];
     let m = j0 + directions[dirKey][1];
 
@@ -37,7 +37,7 @@ const findNeighbor = (board, cell) => {
     }
   }
 
-  return null;
+  return [null, ''];
 };
 
 const reverseBacktrack = (board, cell) => {
@@ -49,12 +49,8 @@ const reverseBacktrack = (board, cell) => {
   //mark current cell as visited
   cell.visited = true;
 
-  // console.log('current cell: ', cell);
-
   //find an unvisited neighbor on the board
-  let [neighbor, direction] = findNeighbor(board, cell);
-
-  // console.log('neighbor: ', neighbor);
+    const [neighbor, direction] = findNeighbor(board, cell);
 
   //if unvisited neighbor is found, proceed by starting with that neighbor
   //else, backtrack to the previous cell and proceed
@@ -65,8 +61,8 @@ const reverseBacktrack = (board, cell) => {
     cell.clearWall(direction);
 
     //establish path between this cell and the neighbor
-    neighbor.previous = cell;
-    cell.next.push(neighbor);
+    neighbor.setPrevious(cell);
+    cell.addNext(neighbor);
 
     reverseBacktrack(board, neighbor);
   } else {
