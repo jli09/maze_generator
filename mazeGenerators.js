@@ -42,18 +42,18 @@ const findNeighbor = (board, cell) => {
   return [null, ''];
 };
 
+//main function
+
 const reverseBacktrack = (board, cell) => {
   //if no cell given, start the path at the beginning of the board
   if (!cell) {
     cell = board[0][0];
   }
 
-  const message = new CustomEvent('visited', {detail: cell});
-  canvas.dispatchEvent(message);
-
-
-  //mark current cell as visited
+  //mark current cell as visited and dispatch to canvas
   cell.visited = true;
+
+  canvas.dispatchEvent(new CustomEvent('visited', { detail: cell }));
 
   //find an unvisited neighbor on the board
     const [neighbor, direction] = findNeighbor(board, cell);
@@ -63,9 +63,11 @@ const reverseBacktrack = (board, cell) => {
   //if there is no previous cell, we've traversed the whole board so quit
 
   if (neighbor) {
+    //dispatch to canvas
+    canvas.dispatchEvent(new CustomEvent('found neighbor', { detail: neighbor }));
+    
     //clear the wall between cell and the neighbor
-      
-    //adjustment for how the board is set up 
+    //adjust for how the board is set up 
       switch (direction) {
           case 'north':
               neighbor.clearWall('south');
