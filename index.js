@@ -38,13 +38,14 @@ function draw() {
 
       //set starting point, i.e. top left corner of cell on canvas *including walls*
 
-      // if (x === 0) x = 1;
-      // else x = x * this.wallWidth;
+      x = x * this.wallWidth;
+      y = y * this.wallHeight;
 
-      // if (y === 0) y = 1;
-      // else y = y * this.wallHeight;
-
-      cell.location = [x * this.wallWidth, y * this.wallHeight];
+      cell.location = [x, y];
+      
+      // //shade cell gray
+      ctx.fillStyle = 'rgb(220, 220, 220)';
+      ctx.fillRect(x + 1, y + 1, this.cellWidth, this.wallHeight);
 
       //get the wall keys from cell
       let wallKeys = Object.keys(cell.walls);
@@ -110,7 +111,7 @@ function draw() {
   testBoard.makeEntrance();
   testBoard.makeExit();
 
-  reverseBacktrack(testBoard.board);
+  // reverseBacktrack(testBoard.board);
 
   console.log(testBoard.board);
 
