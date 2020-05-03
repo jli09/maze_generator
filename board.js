@@ -13,6 +13,14 @@ class Cell{
         this.next = [];
     }
 
+    setWall(dir) {
+        this.walls[dir] = true;
+    }
+
+    clearWall(dir) {
+        this.walls[dir] = false;
+    }
+
     reset() {
         this.visited = false;
         this.previous = null;
