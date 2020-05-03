@@ -56,7 +56,7 @@ class Board {
           //set west wall to true if on the left most row
           if (j === 0) cell.setWall('west');
 
-          //set south and west walls to true for all cells
+          //set south and east walls to true for all cells
           cell.setWall('east');
           cell.setWall('south');
 
