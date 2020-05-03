@@ -48,7 +48,20 @@ class Board {
       let row = [];
 
       for (let j = 0; j < this.width; j++) {
-        row[j] = new Cell(i, j);
+          let cell = new Cell(i, j);
+          
+          //set north wall to true if on the top row
+          if (i === 0) cell.setWall('north');
+
+          //set west wall to true if on the left most row
+          if (j === 0) cell.setWall('west');
+
+          //set south and west walls to true for all cells
+          cell.setWall('east');
+          cell.setWall('south');
+
+          //put cell in row
+          row[j] = cell;
       }
 
       this.board.push(row);

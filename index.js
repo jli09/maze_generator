@@ -12,67 +12,75 @@ function draw() {
 
   class CanvasBoard {
     constructor(width, height, board) {
-      // this.width = width;
-      // this.height = height;
-      this.grid = board.getBoard();
+      this.width = width;
+      this.height = height;
+      this.board = board.board;
+
       this.wallWidth = width / board.width;
       this.wallHeight = height / board.height;
+
+      this.cellWidth = this.wallWidth - 2;
+      this.cellHeight = this.wallHeight - 2;
     }
 
-    makeTopWall(x, y) {
-      ctx.beginPath();
-      ctx.moveTo(x, y);
-      ctx.lineTo(x + this.wallWidth, y);
-      ctx.stroke();
-      ctx.closePath();
+    startBoard() {
+      
     }
 
-    makeLeftWall(x, y) {
-      ctx.beginPath();
-      ctx.moveTo(x, y);
-      ctx.lineTo(x, y + this.wallHeight);
-      ctx.stroke();
-      ctx.closePath();
-    }
+    // makeTopWall(x, y) {
+    //   ctx.beginPath();
+    //   ctx.moveTo(x, y);
+    //   ctx.lineTo(x + this.wallWidth, y);
+    //   ctx.stroke();
+    //   ctx.closePath();
+    // }
 
-    makeRightWall(x, y) {
-      ctx.beginPath();
-      ctx.moveTo(x + this.wallWidth, y);
-      ctx.lineTo(x + this.wallWidth, y + this.wallHeight);
-      ctx.stroke();
-      ctx.closePath();
-    }
+    // makeLeftWall(x, y) {
+    //   ctx.beginPath();
+    //   ctx.moveTo(x, y);
+    //   ctx.lineTo(x, y + this.wallHeight);
+    //   ctx.stroke();
+    //   ctx.closePath();
+    // }
 
-    makeBottomWall(x, y) {
-      ctx.beginPath();
-      ctx.moveTo(x, y + this.wallHeight);
-      ctx.lineTo(x + this.wallWidth, y + this.wallHeight);
-      ctx.stroke();
-      ctx.closePath();
-    }
+    // makeRightWall(x, y) {
+    //   ctx.beginPath();
+    //   ctx.moveTo(x + this.wallWidth, y);
+    //   ctx.lineTo(x + this.wallWidth, y + this.wallHeight);
+    //   ctx.stroke();
+    //   ctx.closePath();
+    // }
 
-    drawBoard() {
-      const { grid } = this;
+    // makeBottomWall(x, y) {
+    //   ctx.beginPath();
+    //   ctx.moveTo(x, y + this.wallHeight);
+    //   ctx.lineTo(x + this.wallWidth, y + this.wallHeight);
+    //   ctx.stroke();
+    //   ctx.closePath();
+    // }
 
-      for (let i = 0; i < grid.length; i++) {
-        let row = grid[i];
+    // drawBoard() {
+    //   const { grid } = this;
 
-        for (let j = 0; j < row.length; j++) {
-          let cell = grid[i][j];
+    //   for (let i = 0; i < grid.length; i++) {
+    //     let row = grid[i];
 
-          if (i === 0)
-            this.makeTopWall(j * this.wallWidth, i * this.wallHeight);
-          if (j === 0)
-            this.makeLeftWall(j * this.wallWidth, i * this.wallHeight);
+    //     for (let j = 0; j < row.length; j++) {
+    //       let cell = grid[i][j];
+
+    //       if (i === 0)
+    //         this.makeTopWall(j * this.wallWidth, i * this.wallHeight);
+    //       if (j === 0)
+    //         this.makeLeftWall(j * this.wallWidth, i * this.wallHeight);
           
-          if (j === grid[i].length - 1 || (grid[i][j + 1].previous !== cell && cell.previous !== grid[i][j + 1])) 
-            this.makeRightWall(j * this.wallWidth, i * this.wallHeight);
+    //       if (j === grid[i].length - 1 || (grid[i][j + 1].previous !== cell && cell.previous !== grid[i][j + 1])) 
+    //         this.makeRightWall(j * this.wallWidth, i * this.wallHeight);
           
-          if (i === grid.length - 1 || (grid[i + 1][j].previous !== cell && cell.previous !== grid[i+1][j]))
-            this.makeBottomWall(j * this.wallWidth, i * this.wallHeight);
-        }
-      }
-    }
+    //       if (i === grid.length - 1 || (grid[i + 1][j].previous !== cell && cell.previous !== grid[i+1][j]))
+    //         this.makeBottomWall(j * this.wallWidth, i * this.wallHeight);
+    //     }
+    //   }
+    // }
   }
 
   const testBoard = new Board(5, 5);
