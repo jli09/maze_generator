@@ -56,7 +56,7 @@ const reverseBacktrack = (board, cell) => {
   // canvas.dispatchEvent(new CustomEvent('visited', { detail: cell }));
 
   //find an unvisited neighbor on the board
-    const [neighbor, direction] = findNeighbor(board, cell);
+  const [neighbor, direction] = findNeighbor(board, cell);
 
   //if unvisited neighbor is found, proceed by starting with that neighbor
   //else, backtrack to the previous cell and proceed
@@ -64,19 +64,37 @@ const reverseBacktrack = (board, cell) => {
 
   if (neighbor) {
     //dispatch to canvas
-    canvas.dispatchEvent(new CustomEvent('found neighbor', { detail: neighbor }));
-    
-    //clear the wall between cell and the neighbor
-    //adjust for how the board is set up 
-      switch (direction) {
-          case 'north':
-              neighbor.clearWall('south');
-              break;
-          case 'west':
-              neighbor.clearWall('east');
-              break;
-          default: cell.clearWall(direction);
-      }
+    canvas.dispatchEvent(
+      new CustomEvent('found neighbor', { detail: neighbor })
+    );
+
+    //clear the wall between cell and the neighbor and dispatch
+    //adjust for how the board is set up
+    switch (direction) {
+      case 'north':
+        neighbor.clearWall('south');
+        canvas.dispatchEvent(
+          new CustomEvent('clear wall', {
+            detail: { cell: neighbor, dir: 'south' },
+          })
+        );
+        break;
+      case 'west':
+        neighbor.clearWall('east');
+        canvas.dispatchEvent(
+          new CustomEvent('clear wall', {
+            detail: { cell: neighbor, dir: 'east' },
+          })
+        );
+        break;
+      default:
+        cell.clearWall(direction);
+        canvas.dispatchEvent(
+          new CustomEvent('clear wall', {
+            detail: { cell, dir: direction },
+          })
+        );
+    }
 
     //establish path between this cell and the neighbor
     neighbor.setPrevious(cell);

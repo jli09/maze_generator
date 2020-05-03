@@ -118,7 +118,20 @@ class CanvasBoard {
     const [x, y] = cell.location;
 
     ctx.fillStyle = 'rgb(255, 215, 0)';
-    ctx.fillRect(x + 1, y + 1, this.cellWidth, this.cellHeight);
+    ctx.fillRect(x + 1, y + 1, this.cellWidth - 1, this.cellHeight - 1);
+  }
+
+  clearWall(cell, dir) {
+    const [x, y] = cell.location;
+    ctx.fillStyle = 'rgb(255, 255, 255';
+
+    if (dir === 'east') {
+      ctx.fillRect(x + 1, y + 1, this.cellWidth * 2 + 1, this.cellHeight);
+    } else {
+      //dir === 'south'
+      ctx.fillRect(x + 1, y + 1, this.cellWidth, this.cellHeight * 2 + 1);
+    }
+
   }
 }
 
@@ -140,6 +153,11 @@ canvas.addEventListener('visited', (e) => {
 canvas.addEventListener('found neighbor', (e) => {
   const cell = e.detail;
   maze.isNeighbor(cell);
+})
+
+canvas.addEventListener('clear wall', (e) => {
+  const { cell, dir } = e.detail;
+  maze.clearWall(cell, dir);
 })
 
 reverseBacktrack(mazeBoard.board);
