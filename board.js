@@ -1,70 +1,88 @@
-class Cell{
-    constructor(i, j) {
-        this.visited = false;
-        this.previous = null;
-        this.location = [i, j];
-    }
+class Cell {
+  constructor(i, j) {
+    this.address = [i, j]; //location in board array
+    this.location = []; //location on canvas
+    this.walls = {
+      north: false,
+      east: false,
+      south: false,
+      west: false,
+    };
+    this.visited = false;
+    this.previous = null;
+    this.next = [];
+  }
 
-    setPrevious(cell) {
-        this.previous = cell;
-    }
+  setPrevious(cell) {
+    this.previous = cell;
+  }
 
-    getPrevious() {
-        if (this.previous) {
-            return this.previous;
-        } else return undefined
-    }
+  addNext(cell) {
+    this.next.push(cell);
+  }
 
-    getLocation() {
-        if (this.location) {
-            return this.location;
-        } else return undefined;
-    }
+  setWall(dir) {
+    this.walls[dir] = true;
+  }
 
-    getVisited() {
-        return this.visited;
-    }
+  clearWall(dir) {
+    this.walls[dir] = false;
+  }
 
-    isVisited() {
-        this.visited = true;
-    }
-
-    reset() {
-        this.visited = false;
-        this.previous = null;
-    }
+  reset() {
+    this.visited = false;
+    this.previous = null;
+    this.next = [];
+  }
 }
 
-class Board{
-    constructor(x, y) {
-        this.width = x;
-        this.height = y;
-        this.grid = [];
+class Board {
+  constructor(width, height) {
+    this.width = width;
+    this.height = height;
+    this.board = [];
+  }
+
+  makeBoard() {
+    for (let i = 0; i < this.height; i++) {
+      let row = [];
+
+      for (let j = 0; j < this.width; j++) {
+        let cell = new Cell(i, j);
+
+        //set north wall to true if on the top row
+        if (i === 0) cell.setWall('north');
+
+        //set west wall to true if on the left most row
+        if (j === 0) cell.setWall('west');
+
+        //set south and east walls to true for all cells
+        cell.setWall('east');
+        cell.setWall('south');
+
+        //put cell in row
+        row[j] = cell;
+      }
+
+      this.board.push(row);
     }
+  }
 
-    makeBoard() {
-        for (let i = 0; i < this.height; i++) {
-            let row = [];
-
-            for (let j = 0; j < this.width; j++) {
-                row[j] = new Cell(i, j);
-            }
-
-            this.grid.push(row);
-        }
+  getCell(i, j) {
+    if (i >= 0 && j < this.board.length) {
+      if (this.board[i][j]) {
+        return this.board[i][j];
+      } else return undefined;
     }
+  }
 
-    getBoard() {
-        return this.grid;
-    }
-
-    getCell(i, j) {
-        if (i >= 0 && j < this.grid.length) {
-            if (this.grid[i][j]) {
-                return this.grid[i][j];
-            }
-            else return undefined;
-        }
+  makeEntrance() {
+      const startCell = this.board[0][0];
+      startCell.clearWall('north');
+  }
+    
+    makeExit() {
+        const endCell = this.board[this.board.length - 1][this.board[0].length - 1];
+        endCell.clearWall('south');
     }
 }
-

@@ -1,10 +1,12 @@
 //directions
-const directions = [
-  [0, -1],
-  [-1, 0],
-  [1, 0],
-  [0, 1],
-];
+const dirKeys = ['north', 'east', 'south', 'west'];
+
+const directions = {
+  north: [-1, 0],
+  east: [0, 1],
+  south: [1, 0],
+  west: [0, -1],
+};
 
 //helper functions
 function shuffle(arr) {
@@ -16,50 +18,70 @@ function shuffle(arr) {
   }
 }
 
-const findNeighbor = (grid, cell) => {
-    shuffle(directions);
+const findNeighbor = (board, cell) => {
+  shuffle(dirKeys);
 
-    const [i0, j0] = cell.getLocation();
+  const [i0, j0] = cell.address;
 
-    for (let i = 0; i < directions.length; i++) {
-        let k = i0 + directions[i][0];
-        let m = j0 + directions[i][1];
+  for (let i = 0; i < dirKeys.length; i++) {
+    let dirKey = dirKeys[i];
+    let k = i0 + directions[dirKey][0];
+    let m = j0 + directions[dirKey][1];
 
-        if (grid[k] && grid[k][m]) {
-            let neighbor = grid[k][m];
+    if (board[k] && board[k][m]) {
+      let neighbor = board[k][m];
 
-            if (!neighbor.getVisited()) {
-                return neighbor;
-            }
-        }
+      if (!neighbor.visited) {
+        return [neighbor, dirKey]; //return the neighbor and its direction relative to the cell
+      }
     }
+  }
 
-    return null;
-}
+  return [null, ''];
+};
 
-const reverseBacktrack = (grid, cell) => {
-    if (!cell) {
-        cell = grid[0][0];
+const reverseBacktrack = (board, cell) => {
+  //if no cell given, start the path at the beginning of the board
+  if (!cell) {
+    cell = board[0][0];
+  }
+
+  //mark current cell as visited
+  cell.visited = true;
+
+  //find an unvisited neighbor on the board
+    const [neighbor, direction] = findNeighbor(board, cell);
+
+  //if unvisited neighbor is found, proceed by starting with that neighbor
+  //else, backtrack to the previous cell and proceed
+  //if there is no previous cell, we've traversed the whole board so quit
+
+  if (neighbor) {
+    //clear the wall between cell and the neighbor
+      
+    //adjustment for how the board is set up 
+      switch (direction) {
+          case 'north':
+              neighbor.clearWall('south');
+              break;
+          case 'west':
+              neighbor.clearWall('east');
+              break;
+          default: cell.clearWall(direction);
+      }
+
+    //establish path between this cell and the neighbor
+    neighbor.setPrevious(cell);
+    cell.addNext(neighbor);
+
+    reverseBacktrack(board, neighbor);
+  } else {
+    let previous = cell.previous;
+
+    // console.log('previous: ', previous);
+
+    if (previous) {
+      reverseBacktrack(board, previous);
     }
-
-    cell.isVisited();
-
-    // console.log('current cell: ', cell);
-
-    let neighbor = findNeighbor(grid, cell);
-
-    // console.log('neighbor: ', neighbor);
-
-    if (neighbor) {
-        neighbor.setPrevious(cell);
-        reverseBacktrack(grid, neighbor);
-    } else {
-        let previous = cell.getPrevious();
-
-        // console.log('previous: ', previous);
-
-        if (previous) {
-            reverseBacktrack(grid, previous);
-        }
-    }
-}
+  }
+};
