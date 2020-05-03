@@ -1,45 +1,30 @@
 class Cell{
     constructor(i, j) {
+        this.address = [i, j]   //location in board array
+        this.location = []     //location on canvas
+        this.walls = {
+            north: false,
+            east: false,
+            south: false,
+            west: false,
+        }
         this.visited = false;
         this.previous = null;
-        this.location = [i, j];
-    }
-
-    setPrevious(cell) {
-        this.previous = cell;
-    }
-
-    getPrevious() {
-        if (this.previous) {
-            return this.previous;
-        } else return undefined
-    }
-
-    getLocation() {
-        if (this.location) {
-            return this.location;
-        } else return undefined;
-    }
-
-    getVisited() {
-        return this.visited;
-    }
-
-    isVisited() {
-        this.visited = true;
+        this.next = [];
     }
 
     reset() {
         this.visited = false;
         this.previous = null;
+        this.next = [];
     }
 }
 
 class Board{
-    constructor(x, y) {
-        this.width = x;
-        this.height = y;
-        this.grid = [];
+    constructor(width, height) {
+        this.width = width;
+        this.height = height;
+        this.board = [];
     }
 
     makeBoard() {
@@ -50,18 +35,14 @@ class Board{
                 row[j] = new Cell(i, j);
             }
 
-            this.grid.push(row);
+            this.board.push(row);
         }
     }
 
-    getBoard() {
-        return this.grid;
-    }
-
     getCell(i, j) {
-        if (i >= 0 && j < this.grid.length) {
-            if (this.grid[i][j]) {
-                return this.grid[i][j];
+        if (i >= 0 && j < this.board.length) {
+            if (this.board[i][j]) {
+                return this.board[i][j];
             }
             else return undefined;
         }
