@@ -117,7 +117,7 @@ class CanvasBoard {
   isNeighbor(cell) {
     const [x, y] = cell.location;
 
-    ctx.fillStyle = 'rgb(225, 215, 0)';
+    ctx.fillStyle = 'rgb(255, 215, 0)';
     ctx.fillRect(x + 1, y + 1, this.cellWidth, this.cellHeight);
   }
 }
@@ -139,7 +139,7 @@ canvas.addEventListener('visited', (e) => {
 
 canvas.addEventListener('found neighbor', (e) => {
   const cell = e.detail;
-  console.log('neighbor: ', cell);
+  maze.isNeighbor(cell);
 })
 
 reverseBacktrack(mazeBoard.board);

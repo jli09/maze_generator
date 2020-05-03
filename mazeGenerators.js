@@ -53,7 +53,7 @@ const reverseBacktrack = (board, cell) => {
   //mark current cell as visited and dispatch to canvas
   cell.visited = true;
 
-  canvas.dispatchEvent(new CustomEvent('visited', { detail: cell }));
+  // canvas.dispatchEvent(new CustomEvent('visited', { detail: cell }));
 
   //find an unvisited neighbor on the board
     const [neighbor, direction] = findNeighbor(board, cell);
