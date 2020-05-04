@@ -190,7 +190,7 @@ class CanvasBoard {
   }
 }
 
-const mazeBoard = new Board(5, 5);
+const mazeBoard = new Board(10, 10);
 
 mazeBoard.makeBoard();
 mazeBoard.makeEntrance();
@@ -269,7 +269,7 @@ const printPath = (index) => {
 
     window.setTimeout(() => {
       printPath(index);
-    }, 1000);
+    }, 250);
   }
 };
 
