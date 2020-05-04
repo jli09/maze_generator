@@ -107,31 +107,79 @@ class CanvasBoard {
 
   //shading cells based on changes
   isVisited(cell) {
-    if (cell.visited) {
-      const [x, y] = cell.location;
+    const [x, y] = cell.location;
+    const [i, j] = cell.address;
+    let k, m, start, dir;
 
+    if (cell.visited) {
       if (cell.rendered || cell.next.length === 0) {
-        ctx.fillStyle = 'rgb(255, 255, 255';
+        ctx.fillStyle = 'rgb(255, 255, 255)';
       } else {
         ctx.fillStyle = 'rgb(225, 140, 0)';
         cell.rendered = true;
       }
       ctx.fillRect(x + 1, y + 1, this.cellWidth, this.cellHeight);
+      this.clearWall(cell, dir);
+    }
+
+    if (cell.previous) {
+      const { previous } = cell;
+      [k, m] = previous.address;
+
+      if (i > k && j === m) {
+        this.clearWall(previous, 'south');
+      }
+
+      if (i === k && j > m) {
+        this.clearWall(previous, 'east');
+      }
+
+      if (i === k && j < m) {
+        this.clearWall(previous, 'west');
+      }
+
+      if (i < k && j === m) {
+        this.clearWall(previous, 'north');
+      }
     }
   }
 
-  isNeighbor(cell) {
+  // isNeighbor(cell) {
+  //   const [x, y] = cell.location;
+
+  //   ctx.fillStyle = 'rgb(255, 215, 0)';
+  //   ctx.fillRect(x + 1, y + 1, this.cellWidth - 1, this.cellHeight - 1);
+  // }
+
+  clearWall(cell, dir) {
     const [x, y] = cell.location;
 
-    ctx.fillStyle = 'rgb(255, 215, 0)';
-    ctx.fillRect(x + 1, y + 1, this.cellWidth - 1, this.cellHeight - 1);
-  }
-
-  clearWall(start, end) {
-    console.log('start: ', start);
-    console.log('end: ', end);
-    // const [x, y] = cell.location;
-    // ctx.fillStyle = 'rgb(255, 255, 255';
+    switch (dir) {
+      case 'north':
+        ctx.fillRect(
+          x + 1,
+          y + 1,
+          this.cellWidth,
+          this.cellHeight * -1
+        );
+        break;
+      case 'east':
+        ctx.fillRect(x + 1, y + 1, this.cellWidth * 2 + 1, this.cellHeight);
+        break;
+      case 'west':
+        ctx.fillRect(
+          x + 1,
+          y + 1,
+          (this.cellWidth) * -1,
+          this.cellHeight
+        );
+        break;
+      case 'south':
+        ctx.fillRect(x + 1, y + 1, this.cellWidth, this.cellHeight * 2 + 1);
+        break;
+      default:
+        ctx.fillRect(x + 1, y + 1, 0, 0);
+    }
 
     // if (dir === 'east') {
     //   ctx.fillRect(x + 1, y + 1, this.cellWidth * 2 + 1, this.cellHeight);
@@ -179,28 +227,51 @@ console.log(mazeBoard.board);
 const printPath = (index) => {
   if (index < path.length) {
     // console.log(path[i]);
-    const [i, j] = path[index]
+    const [i, j] = path[index];
 
     const cell = mazeBoard.getCell(i, j);
-    maze.isVisited(cell);
+    // let neighbor = null;
 
     // if (index < path.length - 1) {
     //   let [k, m] = path[index + 1];
 
-    //   const neighbor = mazeBoard.getCell(i, j);
+    //   neighbor = mazeBoard.getCell(k, m);
 
-    //   setTimeout(() => {
-    //           maze.clearWall(cell.location, neighbor.location);
-    //   }, 1000);
+    //   let start = null;
+    //   let dir = '';
+
+    //   if (i > k && j === m) {
+    //     start = neighbor;
+    //     dir = 'south';
+    //   }
+
+    //   if (i === k && j > m) {
+    //     start = neighbor;
+    //     dir = 'east';
+    //   }
+
+    //   if (i === k && j < m) {
+    //     start = cell;
+    //     dir = 'east';
+    //   }
+
+    //   if (i < k && j === m) {
+    //     start = cell;
+    //     dir = 'south';
+    //   }
+
+    //   maze.clearWall(cell, dir);
     // }
+
+    maze.isVisited(cell);
 
     index++;
 
     window.setTimeout(() => {
       printPath(index);
-    }, 1000)
-  } 
-}
+    }, 1000);
+  }
+};
 
 printPath(0);
 
