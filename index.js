@@ -131,7 +131,6 @@ class CanvasBoard {
       //dir === 'south'
       ctx.fillRect(x + 1, y + 1, this.cellWidth, this.cellHeight * 2 + 1);
     }
-
   }
 }
 
@@ -141,29 +140,45 @@ mazeBoard.makeBoard();
 mazeBoard.makeEntrance();
 mazeBoard.makeExit();
 
-
 const maze = new CanvasBoard(canvas.width, canvas.height, mazeBoard);
 maze.initBoard();
 
-canvas.addEventListener('visited', (e) => {
-  const cell = e.detail;
-  maze.isVisited(cell);
-});
+// canvas.addEventListener('visited', (e) => {
+//   const cell = e.detail;
+//   maze.isVisited(cell);
+// });
 
-canvas.addEventListener('found neighbor', (e) => {
-  const cell = e.detail;
-  maze.isNeighbor(cell);
-})
+// canvas.addEventListener('found neighbor', (e) => {
+//   const cell = e.detail;
+//   maze.isNeighbor(cell);
+// })
 
-canvas.addEventListener('clear wall', (e) => {
-  const { cell, dir } = e.detail;
-  maze.clearWall(cell, dir);
-})
+// canvas.addEventListener('clear wall', (e) => {
+//   const { cell, dir } = e.detail;
+//   maze.clearWall(cell, dir);
+// })
 
-reverseBacktrack(mazeBoard.board);
+const path = reverseBacktrack(mazeBoard.board);
 
 console.log(mazeBoard.board);
 
+// for (let i = 0; i < path.length; i++) {
+//   window.setTimeout(() => {
+//     console.log(path[i]);
+//   }, 3000);
+// }
 
+const printPath = (i) => {
+  if (i < path.length) {
+    console.log(path[i]);
+    i++;
+
+    window.setTimeout(() => {
+      printPath(i);
+    }, 1000)
+  } 
+}
+
+printPath(0);
 
 // testMaze.drawBoard();

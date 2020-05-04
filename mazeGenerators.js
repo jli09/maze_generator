@@ -44,7 +44,7 @@ const findNeighbor = (board, cell) => {
 
 //main function
 
-const reverseBacktrack = (board, cell) => {
+const reverseBacktrack = (board, cell, path = []) => {
   //if no cell given, start the path at the beginning of the board
   if (!cell) {
     cell = board[0][0];
@@ -64,50 +64,53 @@ const reverseBacktrack = (board, cell) => {
 
   if (neighbor) {
     //dispatch to canvas
-    canvas.dispatchEvent(
-      new CustomEvent('found neighbor', { detail: neighbor })
-    );
+    // canvas.dispatchEvent(
+    //   new CustomEvent('found neighbor', { detail: neighbor })
+    // );
 
     //clear the wall between cell and the neighbor and dispatch
     //adjust for how the board is set up
     switch (direction) {
       case 'north':
         neighbor.clearWall('south');
-        canvas.dispatchEvent(
-          new CustomEvent('clear wall', {
-            detail: { cell: neighbor, dir: 'south' },
-          })
-        );
+        // canvas.dispatchEvent(
+        //   new CustomEvent('clear wall', {
+        //     detail: { cell: neighbor, dir: 'south' },
+        //   })
+        // );
         break;
       case 'west':
         neighbor.clearWall('east');
-        canvas.dispatchEvent(
-          new CustomEvent('clear wall', {
-            detail: { cell: neighbor, dir: 'east' },
-          })
-        );
+        // canvas.dispatchEvent(
+        //   new CustomEvent('clear wall', {
+        //     detail: { cell: neighbor, dir: 'east' },
+        //   })
+        // );
         break;
       default:
         cell.clearWall(direction);
-        canvas.dispatchEvent(
-          new CustomEvent('clear wall', {
-            detail: { cell, dir: direction },
-          })
-        );
+        // canvas.dispatchEvent(
+        //   new CustomEvent('clear wall', {
+        //     detail: { cell, dir: direction },
+        //   })
+        // );
     }
 
     //establish path between this cell and the neighbor
     neighbor.setPrevious(cell);
     cell.addNext(neighbor);
 
-    reverseBacktrack(board, neighbor);
+    path.push(cell.address)
+
+    return reverseBacktrack(board, neighbor, path);
   } else {
     let previous = cell.previous;
+    path.push(cell.address);
 
     // console.log('previous: ', previous);
 
     if (previous) {
-      reverseBacktrack(board, previous);
-    }
+      return reverseBacktrack(board, previous, path);
+    } else return path;
   }
 };
