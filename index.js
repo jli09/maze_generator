@@ -12,7 +12,8 @@ class CanvasBoard {
   constructor(width, height, board) {
     this.width = width;
     this.height = height;
-    this.board = board.board;
+    this.board = board;
+    this.grid = board.board;
 
     this.wallWidth = width / board.width;
     this.wallHeight = height / board.height;
@@ -24,11 +25,11 @@ class CanvasBoard {
   //initial board rendering
 
   initBoard() {
-    const { board } = this;
+    const { grid } = this;
 
-    for (let i = 0; i < board.length; i++) {
-      for (let j = 0; j < board[i].length; j++) {
-        this.initCell(board[i][j]);
+    for (let i = 0; i < grid.length; i++) {
+      for (let j = 0; j < grid[i].length; j++) {
+        this.initCell(grid[i][j]);
       }
     }
   }
@@ -109,7 +110,12 @@ class CanvasBoard {
     if (cell.visited) {
       const [x, y] = cell.location;
 
-      ctx.fillStyle = 'rgb(225, 140, 0)';
+      if (cell.rendered || cell.next.length === 0) {
+        ctx.fillStyle = 'rgb(255, 255, 255';
+      } else {
+        ctx.fillStyle = 'rgb(225, 140, 0)';
+        cell.rendered = true;
+      }
       ctx.fillRect(x + 1, y + 1, this.cellWidth, this.cellHeight);
     }
   }
@@ -121,16 +127,18 @@ class CanvasBoard {
     ctx.fillRect(x + 1, y + 1, this.cellWidth - 1, this.cellHeight - 1);
   }
 
-  clearWall(cell, dir) {
-    const [x, y] = cell.location;
-    ctx.fillStyle = 'rgb(255, 255, 255';
+  clearWall(start, end) {
+    console.log('start: ', start);
+    console.log('end: ', end);
+    // const [x, y] = cell.location;
+    // ctx.fillStyle = 'rgb(255, 255, 255';
 
-    if (dir === 'east') {
-      ctx.fillRect(x + 1, y + 1, this.cellWidth * 2 + 1, this.cellHeight);
-    } else {
-      //dir === 'south'
-      ctx.fillRect(x + 1, y + 1, this.cellWidth, this.cellHeight * 2 + 1);
-    }
+    // if (dir === 'east') {
+    //   ctx.fillRect(x + 1, y + 1, this.cellWidth * 2 + 1, this.cellHeight);
+    // } else {
+    //   //dir === 'south'
+    //   ctx.fillRect(x + 1, y + 1, this.cellWidth, this.cellHeight * 2 + 1);
+    // }
   }
 }
 
@@ -168,13 +176,28 @@ console.log(mazeBoard.board);
 //   }, 3000);
 // }
 
-const printPath = (i) => {
-  if (i < path.length) {
-    console.log(path[i]);
-    i++;
+const printPath = (index) => {
+  if (index < path.length) {
+    // console.log(path[i]);
+    const [i, j] = path[index]
+
+    const cell = mazeBoard.getCell(i, j);
+    maze.isVisited(cell);
+
+    // if (index < path.length - 1) {
+    //   let [k, m] = path[index + 1];
+
+    //   const neighbor = mazeBoard.getCell(i, j);
+
+    //   setTimeout(() => {
+    //           maze.clearWall(cell.location, neighbor.location);
+    //   }, 1000);
+    // }
+
+    index++;
 
     window.setTimeout(() => {
-      printPath(i);
+      printPath(index);
     }, 1000)
   } 
 }

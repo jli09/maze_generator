@@ -11,6 +11,8 @@ class Cell {
     this.visited = false;
     this.previous = null;
     this.next = [];
+
+    this.rendered = false;
   }
 
   setPrevious(cell) {
