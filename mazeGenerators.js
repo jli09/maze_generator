@@ -1,4 +1,6 @@
 //directions
+const canvas = document.getElementById('tutorial');
+
 const dirKeys = ['north', 'east', 'south', 'west'];
 
 const directions = {
@@ -40,48 +42,75 @@ const findNeighbor = (board, cell) => {
   return [null, ''];
 };
 
-const reverseBacktrack = (board, cell) => {
+//main function
+
+const reverseBacktrack = (board, cell, path = []) => {
   //if no cell given, start the path at the beginning of the board
   if (!cell) {
     cell = board[0][0];
   }
 
-  //mark current cell as visited
+  //mark current cell as visited and dispatch to canvas
   cell.visited = true;
 
+  // canvas.dispatchEvent(new CustomEvent('visited', { detail: cell }));
+
   //find an unvisited neighbor on the board
-    const [neighbor, direction] = findNeighbor(board, cell);
+  const [neighbor, direction] = findNeighbor(board, cell);
 
   //if unvisited neighbor is found, proceed by starting with that neighbor
   //else, backtrack to the previous cell and proceed
   //if there is no previous cell, we've traversed the whole board so quit
 
   if (neighbor) {
-    //clear the wall between cell and the neighbor
-      
-    //adjustment for how the board is set up 
-      switch (direction) {
-          case 'north':
-              neighbor.clearWall('south');
-              break;
-          case 'west':
-              neighbor.clearWall('east');
-              break;
-          default: cell.clearWall(direction);
-      }
+    //dispatch to canvas
+    // canvas.dispatchEvent(
+    //   new CustomEvent('found neighbor', { detail: neighbor })
+    // );
+
+    //clear the wall between cell and the neighbor and dispatch
+    //adjust for how the board is set up
+    switch (direction) {
+      case 'north':
+        neighbor.clearWall('south');
+        // canvas.dispatchEvent(
+        //   new CustomEvent('clear wall', {
+        //     detail: { cell: neighbor, dir: 'south' },
+        //   })
+        // );
+        break;
+      case 'west':
+        neighbor.clearWall('east');
+        // canvas.dispatchEvent(
+        //   new CustomEvent('clear wall', {
+        //     detail: { cell: neighbor, dir: 'east' },
+        //   })
+        // );
+        break;
+      default:
+        cell.clearWall(direction);
+        // canvas.dispatchEvent(
+        //   new CustomEvent('clear wall', {
+        //     detail: { cell, dir: direction },
+        //   })
+        // );
+    }
 
     //establish path between this cell and the neighbor
     neighbor.setPrevious(cell);
     cell.addNext(neighbor);
 
-    reverseBacktrack(board, neighbor);
+    path.push(cell.address)
+
+    return reverseBacktrack(board, neighbor, path);
   } else {
     let previous = cell.previous;
+    path.push(cell.address);
 
     // console.log('previous: ', previous);
 
     if (previous) {
-      reverseBacktrack(board, previous);
-    }
+      return reverseBacktrack(board, previous, path);
+    } else return path;
   }
 };
