@@ -31,6 +31,7 @@ class Cell {
     this.walls[dir] = false;
   }
 
+  //what does this do exactly? if it's meant to reset the cell, you also need to reset the walls
   reset() {
     this.visited = false;
     this.previous = null;
@@ -42,7 +43,7 @@ class Board {
   constructor(width, height) {
     this.width = width;
     this.height = height;
-    this.board = [];
+    this.board = []; //consider renaming property
   }
 
   makeBoard() {
@@ -79,12 +80,12 @@ class Board {
   }
 
   makeEntrance() {
-      const startCell = this.board[0][0];
-      startCell.clearWall('north');
+    const startCell = this.board[0][0];
+    startCell.clearWall('north');
   }
-    
-    makeExit() {
-        const endCell = this.board[this.board.length - 1][this.board[0].length - 1];
-        endCell.clearWall('south');
-    }
+
+  makeExit() {
+    const endCell = this.board[this.board.length - 1][this.board[0].length - 1];
+    endCell.clearWall('south');
+  }
 }
