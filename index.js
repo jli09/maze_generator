@@ -108,42 +108,50 @@ class CanvasBoard {
   }
 
   //shading cells based on changes
-  isVisited(cell) {
+  visit(cell, preceding) {
     const [x, y] = cell.location;
-    const [i, j] = cell.address;
-    let k, m, start, dir;
+    // const [i, j] = cell.address;
 
-    if (cell.visited) {
-      if (cell.rendered || cell.next.length === 0) {
-        ctx.fillStyle = 'rgb(255, 255, 255)';
-      } else {
-        ctx.fillStyle = 'rgb(225, 140, 0)';
-        cell.rendered = true;
-      }
-      ctx.fillRect(x + 1, y + 1, this.cellWidth, this.cellHeight);
-      this.clearWall(cell, dir);
+    this.fillCell(x + 1, y + 1, this.cellWidth, this.cellHeight, 'red');
+
+    if (preceding) {
+      const [x0, y0] = preceding.location;
+      this.fillCell(x0 + 1, y0 + 1, this.cellWidth, this.cellHeight, 'white');
     }
 
-    if (cell.previous) {
-      const { previous } = cell;
-      [k, m] = previous.address;
+    // let k, m, start, dir;
 
-      if (i > k && j === m) {
-        this.clearWall(previous, 'south');
-      }
+    // if (cell.visited) {
+    //   if (cell.rendered || cell.next.length === 0) {
+    //     ctx.fillStyle = 'rgb(255, 255, 255)';
+    //   } else {
+    //     ctx.fillStyle = 'rgb(225, 140, 0)';
+    //     cell.rendered = true;
+    //   }
+    //   ctx.fillRect(x + 1, y + 1, this.cellWidth, this.cellHeight);
+    //   this.clearWall(cell, dir);
+    // }
 
-      if (i === k && j > m) {
-        this.clearWall(previous, 'east');
-      }
+    // if (cell.previous) {
+    //   const { previous } = cell;
+    //   [k, m] = previous.address;
 
-      if (i === k && j < m) {
-        this.clearWall(previous, 'west');
-      }
+    //   if (i > k && j === m) {
+    //     this.clearWall(previous, 'south');
+    //   }
 
-      if (i < k && j === m) {
-        this.clearWall(previous, 'north');
-      }
-    }
+    //   if (i === k && j > m) {
+    //     this.clearWall(previous, 'east');
+    //   }
+
+    //   if (i === k && j < m) {
+    //     this.clearWall(previous, 'west');
+    //   }
+
+    //   if (i < k && j === m) {
+    //     this.clearWall(previous, 'north');
+    //   }
+    // }
   }
 
   clearWall(cell, dir) {
@@ -187,21 +195,28 @@ mazeBoard.makeExit();
 const maze = new CanvasBoard(canvas.width, canvas.height, mazeBoard);
 maze.initBoard();
 
-// const path = reverseBacktrack(mazeBoard.board);
+const path = reverseBacktrack(mazeBoard.board);
 
-// const printPath = (index) => {
-//   if (index < path.length) {
-//     const [i, j] = path[index];
+const printPath = (index) => {
+  if (index < path.length) {
+    const [i, j] = path[index];
 
-//     const cell = mazeBoard.getCell(i, j);
-//     maze.isVisited(cell);
+    const cell = mazeBoard.getCell(i, j);
+    let preceding = null;
 
-//     index++;
+    if (index > 0) {
+      const [k, m] = path[index - 1];
+      preceding = mazeBoard.getCell(k, m);
+    }
 
-//     window.setTimeout(() => {
-//       printPath(index);
-//     }, 250);
-//   }
-// };
+    maze.visit(cell, preceding);
 
-// printPath(0);
+    index++;
+
+    window.setTimeout(() => {
+      printPath(index);
+    }, 250);
+  }
+};
+
+printPath(0);
