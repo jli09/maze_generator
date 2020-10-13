@@ -46,8 +46,8 @@ class CanvasBoard {
     cell.location = [x, y];
 
     // //shade cell gray
-    ctx.fillStyle = 'rgb(220, 220, 220)';
-    ctx.fillRect(x + 1, y + 1, this.cellWidth, this.wallHeight);
+    const color = 'rgb(220, 220, 220)';
+    this.fillCell(x + 1, y + 1, this.cellWidth, this.wallHeight, color);
 
     //get the wall keys from cell
     let wallKeys = Object.keys(cell.walls);
@@ -92,6 +92,11 @@ class CanvasBoard {
     }
 
     this.drawWall(start, end);
+  }
+
+  fillCell(x, y, width, height, color) {
+    ctx.fillStyle = color;
+    ctx.fillRect(x, y, width, height);
   }
 
   drawWall(start, end) {
@@ -182,23 +187,21 @@ mazeBoard.makeExit();
 const maze = new CanvasBoard(canvas.width, canvas.height, mazeBoard);
 maze.initBoard();
 
-const path = reverseBacktrack(mazeBoard.board);
+// const path = reverseBacktrack(mazeBoard.board);
 
-console.log(mazeBoard.board);
+// const printPath = (index) => {
+//   if (index < path.length) {
+//     const [i, j] = path[index];
 
-const printPath = (index) => {
-  if (index < path.length) {
-    const [i, j] = path[index];
+//     const cell = mazeBoard.getCell(i, j);
+//     maze.isVisited(cell);
 
-    const cell = mazeBoard.getCell(i, j);
-    maze.isVisited(cell);
+//     index++;
 
-    index++;
+//     window.setTimeout(() => {
+//       printPath(index);
+//     }, 250);
+//   }
+// };
 
-    window.setTimeout(() => {
-      printPath(index);
-    }, 250);
-  }
-};
-
-printPath(0);
+// printPath(0);
