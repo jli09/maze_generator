@@ -69,10 +69,6 @@ class CanvasBoard {
 
     const { wallWidth, wallHeight } = this;
 
-    //adjustment for edges
-    // if (cell.address[1] === 0) x = x - 1;
-    // if (cell.address[0] === 0) y = y - 1;
-
     switch (dir) {
       case 'north':
         start = [x, y];
@@ -145,13 +141,6 @@ class CanvasBoard {
     }
   }
 
-  // isNeighbor(cell) {
-  //   const [x, y] = cell.location;
-
-  //   ctx.fillStyle = 'rgb(255, 215, 0)';
-  //   ctx.fillRect(x + 1, y + 1, this.cellWidth - 1, this.cellHeight - 1);
-  // }
-
   clearWall(cell, dir) {
     const [x, y] = cell.location;
 
@@ -181,13 +170,6 @@ class CanvasBoard {
       default:
         ctx.fillRect(x + 1, y + 1, 0, 0);
     }
-
-    // if (dir === 'east') {
-    //   ctx.fillRect(x + 1, y + 1, this.cellWidth * 2 + 1, this.cellHeight);
-    // } else {
-    //   //dir === 'south'
-    //   ctx.fillRect(x + 1, y + 1, this.cellWidth, this.cellHeight * 2 + 1);
-    // }
   }
 }
 
@@ -200,70 +182,15 @@ mazeBoard.makeExit();
 const maze = new CanvasBoard(canvas.width, canvas.height, mazeBoard);
 maze.initBoard();
 
-// canvas.addEventListener('visited', (e) => {
-//   const cell = e.detail;
-//   maze.isVisited(cell);
-// });
-
-// canvas.addEventListener('found neighbor', (e) => {
-//   const cell = e.detail;
-//   maze.isNeighbor(cell);
-// })
-
-// canvas.addEventListener('clear wall', (e) => {
-//   const { cell, dir } = e.detail;
-//   maze.clearWall(cell, dir);
-// })
-
 const path = reverseBacktrack(mazeBoard.board);
 
 console.log(mazeBoard.board);
 
-// for (let i = 0; i < path.length; i++) {
-//   window.setTimeout(() => {
-//     console.log(path[i]);
-//   }, 3000);
-// }
-
 const printPath = (index) => {
   if (index < path.length) {
-    // console.log(path[i]);
     const [i, j] = path[index];
 
     const cell = mazeBoard.getCell(i, j);
-    // let neighbor = null;
-
-    // if (index < path.length - 1) {
-    //   let [k, m] = path[index + 1];
-
-    //   neighbor = mazeBoard.getCell(k, m);
-
-    //   let start = null;
-    //   let dir = '';
-
-    //   if (i > k && j === m) {
-    //     start = neighbor;
-    //     dir = 'south';
-    //   }
-
-    //   if (i === k && j > m) {
-    //     start = neighbor;
-    //     dir = 'east';
-    //   }
-
-    //   if (i === k && j < m) {
-    //     start = cell;
-    //     dir = 'east';
-    //   }
-
-    //   if (i < k && j === m) {
-    //     start = cell;
-    //     dir = 'south';
-    //   }
-
-    //   maze.clearWall(cell, dir);
-    // }
-
     maze.isVisited(cell);
 
     index++;
@@ -275,5 +202,3 @@ const printPath = (index) => {
 };
 
 printPath(0);
-
-// testMaze.drawBoard();
