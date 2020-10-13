@@ -116,7 +116,13 @@ class CanvasBoard {
 
     if (preceding) {
       const [x0, y0] = preceding.location;
-      this.fillCell(x0 + 1, y0 + 1, this.cellWidth, this.cellHeight, 'white');
+
+      if (preceding.rendered || preceding.next.length === 0) {
+        this.fillCell(x0 + 1, y0 + 1, this.cellWidth, this.cellHeight, 'white');
+      } else {
+        this.fillCell(x0 + 1, y0 + 1, this.cellWidth, this.cellHeight, 'blue');
+        preceding.rendered = true;
+      }
     }
 
     // let k, m, start, dir;
@@ -159,23 +165,13 @@ class CanvasBoard {
 
     switch (dir) {
       case 'north':
-        ctx.fillRect(
-          x + 1,
-          y + 1,
-          this.cellWidth,
-          this.cellHeight * -1
-        );
+        ctx.fillRect(x + 1, y + 1, this.cellWidth, this.cellHeight * -1);
         break;
       case 'east':
         ctx.fillRect(x + 1, y + 1, this.cellWidth * 2 + 1, this.cellHeight);
         break;
       case 'west':
-        ctx.fillRect(
-          x + 1,
-          y + 1,
-          (this.cellWidth) * -1,
-          this.cellHeight
-        );
+        ctx.fillRect(x + 1, y + 1, this.cellWidth * -1, this.cellHeight);
         break;
       case 'south':
         ctx.fillRect(x + 1, y + 1, this.cellWidth, this.cellHeight * 2 + 1);
