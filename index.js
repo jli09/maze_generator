@@ -1,8 +1,9 @@
 //setting up canvas
+const canvas = document.querySelector('canvas');
 const ctx = canvas.getContext('2d');
 
-console.log('canvas: ', canvas);
-console.log('context: ', ctx);
+// console.log('canvas: ', canvas);
+// console.log('context: ', ctx);
 
 ctx.strokeStyle = 'black';
 // ctx.fillStyle = 'rgb(200, 0, 0)';

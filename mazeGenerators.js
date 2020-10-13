@@ -1,6 +1,4 @@
 //directions
-const canvas = document.getElementById('tutorial');
-
 const dirKeys = ['north', 'east', 'south', 'west'];
 
 const directions = {
